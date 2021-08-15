@@ -28,7 +28,7 @@ jobs:
         # https://github.com/docker/metadata-action
         with:
           images: |
-            ghcr.io/cheyilin/wrk
+            ghcr.io/cheyilin/docker-wrk
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
