@@ -17,7 +17,7 @@ LABEL maintainer="Cheyi Lin <cheyi.lin@gmail.com>"
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 RUN apt-get update; \
     apt-get install -y --no-install-recommends --no-install-suggests \
-        ca-certificates curl wget; \
+        netbase ca-certificates curl wget; \
     rm -rf /var/lib/apt/lists/*; \
     update-ca-certificates
 
