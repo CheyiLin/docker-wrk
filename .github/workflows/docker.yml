@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BUILD_PLATFORMS: linux/amd64,linux/arm64
+      BUILD_ASSETS: ghcr.io/cheyilin/docker-wrk:build
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -52,10 +53,10 @@ jobs:
           file: docker/Dockerfile.build
           platforms: ${{ env.BUILD_PLATFORMS }}
           push: true
-          cache-from: type=registry,ref=ghcr.io/cheyilin/docker-wrk:build
+          cache-from: type=registry,ref=${{ env.BUILD_ASSETS }}
           cache-to: type=inline
           tags: |
-            ghcr.io/cheyilin/docker-wrk:build
+            ${{ env.BUILD_ASSETS }}
       - name: Pack and Push
         uses: docker/build-push-action@v2
         with:
@@ -63,7 +64,7 @@ jobs:
           file: docker/Dockerfile.pack
           platforms: ${{ env.BUILD_PLATFORMS }}
           build-args: |
-            BUILD_ASSETS=ghcr.io/cheyilin/docker-wrk:build
+            BUILD_ASSETS=${{ env.BUILD_ASSETS }}
           pull: true
           push: true
           cache-from: type=gha
