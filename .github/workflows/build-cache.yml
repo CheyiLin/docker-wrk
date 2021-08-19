@@ -1,15 +1,13 @@
 # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
-name: docker
+name: build-cache
 on:
+  schedule:
+    - cron: "11 2 * * *"
   push:
     branches:
       - dev/**
     paths:
-      # - .github/**
-      # - docker/Dockerfile.pack
-      - src/**
-      - deps/**
-      - Makefile
+      - docker/Dockerfile.build
 jobs:
   build:
     name: Build
@@ -19,19 +17,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Docker metadata
-        id: meta
-        uses: docker/metadata-action@v3
-        # https://github.com/docker/metadata-action
-        with:
-          images: |
-            ghcr.io/cheyilin/docker-wrk
-          tags: |
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=sha,format=short,prefix=
-          flavor: |
-            latest=true
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
@@ -44,15 +29,15 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and Push
+      - name: Build cache
         uses: docker/build-push-action@v2
+        # https://github.com/docker/build-push-action
         with:
           context: .
-          file: docker/Dockerfile.pack
+          file: docker/Dockerfile.build
           platforms: ${{ env.BUILD_PLATFORMS }}
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          labels: ${{ steps.meta.outputs.labels }}
           tags: |
-            ${{ steps.meta.outputs.tags }}
+            ghcr.io/cheyilin/docker-wrk:build

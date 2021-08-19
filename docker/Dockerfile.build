@@ -9,6 +9,6 @@ RUN apt-get update; \
     apt-get install -y --no-install-recommends --no-install-suggests \
         build-essential unzip;
 
-COPY . /build
-WORKDIR /build
+COPY . /build-cache
+WORKDIR /build-cache
 RUN make

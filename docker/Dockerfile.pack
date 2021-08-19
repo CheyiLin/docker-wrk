@@ -1,7 +1,14 @@
 ARG UBUNTU_VERSION=20.04
-ARG BUILD_ASSETS=ghcr.io/cheyilin/docker-wrk:build
 
-FROM ${BUILD_ASSETS} AS builder
+FROM ghcr.io/cheyilin/docker-wrk:build AS builder
+
+COPY . /build
+WORKDIR /build
+
+SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
+RUN cp -Rp /build-cache/obj .
+RUN make
+
 FROM ubuntu:${UBUNTU_VERSION}
 
 LABEL maintainer="Cheyi Lin <cheyi.lin@gmail.com>"
