@@ -14,7 +14,7 @@ on:
 jobs:
   test:
     name: Test
-    if: ${{ github.event.inputs.name == "manual" || github.event.workflow_run.conclusion == "success" }}
+    if: ${{ github.event.inputs.name == 'manual' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -33,8 +33,8 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Check Platform/Version
         run: |
-          docker run --platform=${{ matrix.platform }} --entrypoint=bash ${{ env.WRK_IMAGE }} -c "uname -a"
+          docker run --platform=${{ matrix.platform }} --entrypoint=bash ${{ env.WRK_IMAGE }} -c 'uname -a'
           docker run --platform=${{ matrix.platform }} ${{ env.WRK_IMAGE }} --version
       - name: Test
         run: |
-          docker run --platform=${{ matrix.platform }} ${{ env.WRK_IMAGE }} -t4 -c16 -d1m --latency "https://httpbin.org/get"
+          docker run --platform=${{ matrix.platform }} ${{ env.WRK_IMAGE }} -t4 -c16 -d1m --latency 'https://httpbin.org/get'
