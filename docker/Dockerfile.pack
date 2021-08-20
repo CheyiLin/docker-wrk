@@ -1,6 +1,7 @@
 ARG UBUNTU_VERSION=20.04
+ARG BUILD_CACHE=ghcr.io/cheyilin/docker-wrk:build
 
-FROM ghcr.io/cheyilin/docker-wrk:build AS builder
+FROM ${BUILD_CACHE} AS builder
 
 COPY . /build
 WORKDIR /build

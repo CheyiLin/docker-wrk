@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BUILD_PLATFORMS: linux/amd64,linux/arm64
+      BUILD_CACHE: ghcr.io/cheyilin/docker-wrk:build
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -46,10 +47,13 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and Push
         uses: docker/build-push-action@v2
+        # https://github.com/docker/build-push-action
         with:
           context: .
           file: docker/Dockerfile.pack
           platforms: ${{ env.BUILD_PLATFORMS }}
+          build-args: |
+            BUILD_CACHE=${{ env.BUILD_CACHE }}
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
