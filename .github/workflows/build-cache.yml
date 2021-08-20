@@ -1,6 +1,7 @@
 # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
 name: build-cache
 on:
+  workflow_dispatch:
   schedule:
     - cron: "11 2 * * *"
   push:
