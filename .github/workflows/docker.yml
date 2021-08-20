@@ -5,8 +5,8 @@ on:
     branches:
       - dev/**
     paths:
-      # - .github/**
-      # - docker/Dockerfile.pack
+      - .github/**
+      - docker/Dockerfile.pack
       - src/**
       - deps/**
       - Makefile
