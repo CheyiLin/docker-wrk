@@ -34,7 +34,7 @@ jobs:
       - name: Check Platform/Version
         run: |
           docker run --platform=${{ matrix.platform }} --entrypoint=bash ${{ env.WRK_IMAGE }} -c 'uname -a'
-          docker run --platform=${{ matrix.platform }} ${{ env.WRK_IMAGE }} --version
+          docker run --platform=${{ matrix.platform }} ${{ env.WRK_IMAGE }} --version || true
       - name: Test
         run: |
           docker run --platform=${{ matrix.platform }} ${{ env.WRK_IMAGE }} -t4 -c16 -d1m --latency 'https://httpbin.org/get'
