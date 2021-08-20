@@ -1,0 +1,40 @@
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+name: docker-test
+on:
+  workflow_run:
+    workflows:
+      - docker-image
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      name:
+        default: manual
+        required: false
+jobs:
+  test:
+    name: Test
+    if: ${{ github.event.inputs.name == "manual" || github.event.workflow_run.conclusion == "success" }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+    env:
+      WRK_IMAGE: ghcr.io/cheyilin/docker-wrk:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Check Platform/Version
+        run: |
+          docker run --platform=${{ matrix.platform }} --entrypoint=bash ${{ env.WRK_IMAGE }} -c "uname -a"
+          docker run --platform=${{ matrix.platform }} ${{ env.WRK_IMAGE }} --version
+      - name: Test
+        run: |
+          docker run --platform=${{ matrix.platform }} ${{ env.WRK_IMAGE }} -t4 -c16 -d1m --latency "https://httpbin.org/get"
