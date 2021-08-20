@@ -7,7 +7,7 @@ LABEL maintainer="Cheyi Lin <cheyi.lin@gmail.com>"
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 RUN apt-get update; \
     apt-get install -y --no-install-recommends --no-install-suggests \
-        build-essential unzip;
+        build-essential git unzip;
 
 COPY . /build-cache
 WORKDIR /build-cache
