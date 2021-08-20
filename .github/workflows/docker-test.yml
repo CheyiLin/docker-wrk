@@ -22,8 +22,10 @@ jobs:
         platform:
           - linux/amd64
           - linux/arm64
-    env:
-      WRK_IMAGE: ghcr.io/cheyilin/docker-wrk:latest
+        image:
+          - ghcr.io/cheyilin/docker-wrk:latest
+          - cheyilin/docker-wrk:latest
+    env: {}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -33,8 +35,8 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Check Platform/Version
         run: |
-          docker run --platform=${{ matrix.platform }} --entrypoint=bash ${{ env.WRK_IMAGE }} -c 'uname -a'
-          docker run --platform=${{ matrix.platform }} ${{ env.WRK_IMAGE }} --version || true
+          docker run --platform=${{ matrix.platform }} --entrypoint=bash ${{ matrix.image }} -c 'uname -a'
+          docker run --platform=${{ matrix.platform }} ${{ matrix.image }} --version || true
       - name: Test
         run: |
-          docker run --platform=${{ matrix.platform }} ${{ env.WRK_IMAGE }} -t4 -c16 -d1m --latency 'https://httpbin.org/get'
+          docker run --platform=${{ matrix.platform }} ${{ matrix.image }} -t4 -c16 -d1m --latency 'https://httpbin.org/get'
